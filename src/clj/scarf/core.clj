@@ -28,12 +28,15 @@
                  "edn-body" (read-inputstream-edn body))
                request))))
 
+;; ----------------------------------------------------------------------------
+;; Routes
+
 (defn index []
   (file-response "public/html/index.html" {:root "resources"}))
 
 (defroutes routes
   (GET "/" [] (index))
-  (GET "/foo" [] (index))
+  (GET "/kontakt" [] (index))
   (route/files "/" {:root "resources/public/assets"}))
 
 (def handler
