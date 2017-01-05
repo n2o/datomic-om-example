@@ -7,43 +7,13 @@
             [clojure.edn :as edn]
             [datomic.api :as d]))
 
-(def uri "datomic:free://localhost:4334/scarf")
-(def conn (d/connect uri))
-
-(defn index []
-  (file-response "public/html/index.html" {:root "resources"}))
+#_(def uri "datomic:free://localhost:4334/scarf")
+#_(def conn (d/connect uri))
 
 (defn generate-response [data & [status]]
   {:status (or status 200)
    :headers {"Content-Type" "application/edn"}
    :body (pr-str data)})
-
-(defn get-classes [db]
-  (->> (d/q '[:find ?class
-              :where
-              [?class :class/id]]
-            db)
-       (map #(d/touch (d/entity db (first %))))
-       vec))
-
-(defn create-class [params]
-  {:status 500})
-
-(defn update-class [params]
-  (let [id    (:class/id params)
-        db    (d/db conn)
-        title (:class/title params)
-        eid   (ffirst
-               (d/q '[:find ?class
-                      :in $ ?id
-                      :where
-                      [?class :class/id ?id]]
-                    db id))]
-    (d/transact conn [[:db/add eid :class/title title]])
-    (generate-response {:status :ok})))
-
-(defn classes []
-  (generate-response (get-classes (d/db conn))))
 
 (defn read-inputstream-edn [input]
   (edn/read
@@ -58,18 +28,14 @@
                  "edn-body" (read-inputstream-edn body))
                request))))
 
-(def handler 
-  (-> routes
-      parse-edn-body))
-
-(defn init []
-  (generate-response
-   {:classes {:url "/classes" :coll (get-classes (d/db conn))}}))
+(defn index []
+  (file-response "public/html/index.html" {:root "resources"}))
 
 (defroutes routes
   (GET "/" [] (index))
-  (GET "/init" [] (init))
-  (GET "/classes" [] (classes))
-  (POST "/classes" {params :edn-body} (create-class params))
-  (PUT "/classes" {params :edn-body} (update-class params))
-  (route/files "/" {:root "resources/public"}))
+  (GET "/foo" [] (index))
+  (route/files "/" {:root "resources/public/assets"}))
+
+(def handler
+  (-> routes
+      parse-edn-body))
