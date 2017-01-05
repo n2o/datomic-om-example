@@ -32,12 +32,9 @@ path
     {:state  init-data
      :parser (om/parser {:read read :mutate mutate})}))
 
-
 (cond
   (= "/kontakt" path) (om/add-root! reconciler cview/contact-view (gdom/getElement "app"))
-  (= "/" path) (println "index") 
-  )
-
+  (= "/" path) (println "index"))
 
 (defn on-js-reload []
 
