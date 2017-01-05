@@ -10,6 +10,7 @@
                  [org.clojure/clojurescript "1.9.293"]
                  [org.clojure/core.async "0.2.395"]
                  [org.omcljs/om "1.0.0-alpha47"]
+                 [com.cemerick/url "0.1.1"]
                  [ring "1.5.0"]
                  [compojure "1.5.1"]
                  [com.datomic/datomic-free "0.9.5544" :exclusions [joda-time]]]
